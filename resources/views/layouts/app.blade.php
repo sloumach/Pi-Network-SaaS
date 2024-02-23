@@ -29,47 +29,40 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="collapse navbar-collapse mx-2" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
+                    @auth
+                    <ul class="navbar-nav me-auto mx-5">
+                        <li class="nav-item mx-3">
+                            <a class="nav-link" href="{{ route('plans') }}">{{ __('Plans') }}</a>
+                        </li>
+                        <li class="nav-item mx-3">
+                            <a class="nav-link" href="{{ route('languages') }}">{{ __('Langage exams') }}</a>
+                        </li>
+                        <li class="nav-item mx-3">
+                            <a class="nav-link" href="{{ route('covers') }}">{{ __('Cover Letter') }}</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                {{ __('Historiques') }}
+                            </a>
 
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('historiqueslanguages') }}">
+                                    {{ __('Languages') }}
+                                </a>
+                                <a class="dropdown-item" href="{{ route('historiquescovers') }}">
+                                    {{ __('Covers') }}
                                 </a>
 
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
+                            </div>
+                        </li>
                     </ul>
+                    @endauth
+
+                    <!-- Right Side Of Navbar -->
+
                 </div>
             </div>
         </nav>
@@ -79,4 +72,6 @@
         </main>
     </div>
 </body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Inclure jQuery -->
+@stack('scripts')
 </html>

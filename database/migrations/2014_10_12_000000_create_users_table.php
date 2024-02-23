@@ -17,6 +17,13 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('role')->default('user');
+            $table->integer('available_tcf')->default(0);
+            $table->integer('available_ielts')->default(0);
+            $table->integer('available_lettres')->default(0);
+            $table->integer('max_tcf')->default(0);
+            $table->integer('max_ielts')->default(0);
+            $table->integer('max_lettres')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

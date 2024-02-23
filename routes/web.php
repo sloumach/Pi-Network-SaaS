@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PlansController;
+use App\Http\Controllers\PaiementController;
+use App\Http\Controllers\LanguagesController;
+use App\Http\Controllers\HistoriquesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,4 +29,15 @@ Route::get('/services', function () {
     return view('nosservices');
 })->name('services');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/plans', [App\Http\Controllers\PlansController::class, 'create'])->name('plans');
+    Route::get('/languages', [App\Http\Controllers\LanguagesController::class, 'create'])->name('languages');
+    Route::get('/covers', [App\Http\Controllers\CoversController::class, 'create'])->name('covers');
+    Route::get('/historiquelanguages', [HistoriquesController::class, 'historiqueLanguages'])->name('historiqueslanguages');
+    Route::get('/historiquecovers', [HistoriquesController::class, 'historiqueCovers'])->name('historiquescovers');
+    Route::get('/paiement', [App\Http\Controllers\PaiementController::class, 'create'])->name('paiement');
+    Route::get('/paiement', [App\Http\Controllers\PaiementController::class, 'create'])->name('GetCover');
+
+
+});
