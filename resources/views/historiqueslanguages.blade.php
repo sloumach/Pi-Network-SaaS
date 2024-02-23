@@ -54,4 +54,7 @@
     </div>
 
 </div>
+@push('scripts')
+    <script src="{{ asset('js/languageslistener.js') }}"></script>
+@endpush
 @endsection
