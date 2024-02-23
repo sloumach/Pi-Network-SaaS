@@ -5,10 +5,11 @@ $(document).ready(function() {
     // Fonction pour vérifier l'état de l'enregistrement périodiquement
     function checkRecordStatus() {
         $.ajax({
-            url: "{{ route('CheckCover') }}", // Route vers la méthode du contrôleur
+            url: "/checkcover", // Route vers la méthode du contrôleur
             type: "GET",
-            data: { recordId: "ID_DU_RECORD_A_VERIFIER" }, // Remplacer ID_DU_RECORD_A_VERIFIER par l'identifiant de l'enregistrement à vérifier
+            data: { recordId: "3" }, // Remplacer ID_DU_RECORD_A_VERIFIER par l'identifiant de l'enregistrement à vérifier
             success: function(response) {
+
                 // Traitement de la réponse
                 if (response === "in progress") {
                     // Faire quelque chose si l'enregistrement est en cours de traitement

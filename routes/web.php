@@ -37,8 +37,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/historiquelanguages', [HistoriquesController::class, 'historiqueLanguages'])->name('historiqueslanguages');
     Route::get('/historiquecovers', [HistoriquesController::class, 'historiqueCovers'])->name('historiquescovers');
     Route::get('/paiement', [App\Http\Controllers\PaiementController::class, 'create'])->name('paiement');
-    Route::get('/paiement', [App\Http\Controllers\CoversController::class, 'checkCoverStatus'])->name('CheckCover');
-    Route::get('/paiement', [App\Http\Controllers\PaiementController::class, 'checkLanguageStatus'])->name('CheckLanguage');
+    Route::get('/checkcover', [App\Http\Controllers\CoversController::class, 'checkCoverStatus'])->name('CheckCover');
+    Route::get('/checklanguage', [App\Http\Controllers\LanguagesController::class, 'checkLanguageStatus'])->name('CheckLanguage');
     Route::post('/getcover', [App\Http\Controllers\CoversController::class, 'GetCover'])->name('GetCover');
     Route::post('/getlanguage', [App\Http\Controllers\PaiementController::class, 'GetLanguage'])->name('GetLanguage');
 

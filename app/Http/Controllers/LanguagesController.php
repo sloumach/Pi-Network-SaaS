@@ -31,7 +31,7 @@ class LanguagesController extends Controller
     {
         // Récupérer l'identifiant de l'enregistrement à vérifier à partir de la requête AJAX
         $recordId = $request->input('recordId');
-
+        return response()->json($recordId);
         // Récupérer l'enregistrement correspondant dans la base de données
         $record = Exemple::find($recordId);
 
