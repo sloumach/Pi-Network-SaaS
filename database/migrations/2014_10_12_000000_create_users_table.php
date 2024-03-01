@@ -18,6 +18,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('role')->default('user');
+            $table->string('subscribed')->default('no');
+            $table->integer('plan')->default(0);
             $table->integer('available_tcf')->default(0);
             $table->integer('available_ielts')->default(0);
             $table->integer('available_lettres')->default(0);

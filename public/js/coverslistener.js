@@ -30,6 +30,6 @@ $(document).ready(function() {
     }
 
     // Appeler la fonction pour vérifier périodiquement l'état de l'enregistrement
-    var interval = setInterval(checkRecordStatus, 80000); // Vérifier toutes les 5 secondes (ajustez selon vos besoins)
+    var interval = setInterval(checkRecordStatus, 2000); // Vérifier toutes les 5 secondes (ajustez selon vos besoins)
 });
 

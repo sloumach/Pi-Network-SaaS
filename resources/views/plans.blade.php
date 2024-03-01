@@ -29,9 +29,9 @@
                 <img class="card-img-top" src="{{ asset('assets/img/aijob3.jpg') }}" alt="Card image cap">
                 <div class="card-body">
                     <h5 class="card-title">Diamant</h5>
-                    <p class="card-text">35 Lettres de motivation </p>
-                    <p class="card-text">35 Textes TCF </p>
-                    <p class="card-text">35 Textes IELTS </p>
+                    <p class="card-text">15 Lettres de motivation </p>
+                    <p class="card-text">15 Textes TCF </p>
+                    <p class="card-text">15 Textes IELTS </p>
                     <a href="#" class="btn btn-primary border-0" style="background-color: #f4623a;">Prix 5 Pi</a>
                 </div>
             </div></div>
@@ -39,7 +39,7 @@
     </div>
     <div class="row justify-content-center align-items-center">
         <div class="col-8 col-sm-8">
-            <div class="alert alert-indigo" style="border-color: #6610f2; margin-top:5%" >
+            <div class="alert alert-indigo bg-indigo" style="border-color: #6610f2; margin-top:5%" >
                 <p class="m-0">Paiement uniquement avec PI</p>
             </div>
         </div>

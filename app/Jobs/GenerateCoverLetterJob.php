@@ -61,29 +61,41 @@ class GenerateCoverLetterJob implements ShouldQueue
     {
         // Initialisez un client Guzzle
         $client = new Client();
-
         // Clé API OpenAI
-        $apiKey = 'VOTRE_CLE_API_OPENAI';
+        $OPENAI_API_KEY =env('OPENAI_KEY');
 
-        // Corps de la requête à envoyer à l'API GPT de OpenAI
-        $requestData = [
-            'prompt' => "Dear Hiring Manager,\n\nI am writing to apply for the position of $position at $company. My name is $name and I am excited to bring my skills and experience to your team.\n\nSincerely,\n$name",
-            'model' => $version, // Spécifiez la version du modèle ici
-        ];
         try {
-            // Exemple d'appel à l'API GPT de OpenAI avec Guzzle
-            $response = $client->post('https://api.openai.com/v1/completions', [
+            $response = $client->post('https://api.openai.com/v1/chat/completions', [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . $apiKey,
                     'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $OPENAI_API_KEY, // Remplacez $OPENAI_API_KEY par votre clé API OpenAI
                 ],
-                'json' => $requestData,
+                'json' => [
+                    'model' => 'gpt-3.5-turbo',
+                    'messages' => [
+                        [
+                            'role' => 'system',
+                            'content' => 'Vous êtes un rédacteur des lettres de motivations',
+                        ],
+                        [
+                            'role' => 'user',
+                            'content' => 'rédige une lettre de motivation (Cover letter) pour l\'envoyer à une entreprise qui cherche un développeur php expérimenté.
+                            Voila les informations que tu as besoin pour la rédaction:
+                            Mon nom complet: "'.$name.'", l\'entreprise qu\'il souhaite la rejoindre: "'.$company.'"
+                            et la position demandé par l\'entreprise dans son annonce: "'.$position.'"
+                                . Rédacte directement la lettre, rien avant et rien après',
+                        ],
+                    ],
+                ],
             ]);
+            $body = $response->getBody();
+            $data = json_decode($body, true);
+            $text = $data['choices'][0]['message']['content'];
+            // Supprimer les guillemets triples
+            $text = str_replace('"""', '', $text);
+            // Supprimer les sauts de ligne
+            $text = str_replace("\n", '', $text);
 
-            // Traitement de la réponse de l'API
-            $responseBody = json_decode($response->getBody(), true); // Convertir la réponse JSON en tableau associatif
-            $generatedText = $responseBody['choices'][0]['text']; // Extraire le texte généré par l'API
-            return $generatedText;
 
         } catch (RequestException $e) {
 
