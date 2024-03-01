@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Jobs\GenerateCoverLetterJob;
 use GuzzleHttp\Client;
 
@@ -16,9 +17,6 @@ class CoversController extends Controller
     public function GetCover(Request $request)
     {
         $client = new Client();
-
-
-
         // Valider les données du formulaire
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
@@ -59,7 +57,9 @@ class CoversController extends Controller
         dd($text); */
         //ici on enregistre dans la table et on envoi le id de l'enregistrement dans le job
 
-        GenerateCoverLetterJob::dispatch($validatedData['name'], $validatedData['company'], $validatedData['position'], 'gpt-3.5-turbo');
+        /* $user_id = Auth::id(); */
+
+        GenerateCoverLetterJob::dispatch($validatedData['name'], $validatedData['company'], $validatedData['position'], 'gpt-3.5-turbo',Auth::id());
 
         // Retourner la réponse ou rediriger vers une autre page avec le résultat
         return redirect()->route('historiquescovers');

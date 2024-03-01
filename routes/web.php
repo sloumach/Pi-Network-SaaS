@@ -32,15 +32,19 @@ Route::get('/services', function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/plans', [App\Http\Controllers\PlansController::class, 'create'])->name('plans');
+
     Route::get('/languages', [App\Http\Controllers\LanguagesController::class, 'create'])->name('languages');
-    Route::get('/covers', [App\Http\Controllers\CoversController::class, 'create'])->name('covers');
+    Route::get('/checklanguage', [App\Http\Controllers\LanguagesController::class, 'checkLanguageStatus'])->name('CheckLanguage');
+
     Route::get('/historiquelanguages', [HistoriquesController::class, 'historiqueLanguages'])->name('historiqueslanguages');
     Route::get('/historiquecovers', [HistoriquesController::class, 'historiqueCovers'])->name('historiquescovers');
-    Route::get('/paiement', [App\Http\Controllers\PaiementController::class, 'create'])->name('paiement');
+
+    Route::get('/covers', [App\Http\Controllers\CoversController::class, 'create'])->name('covers');
     Route::get('/checkcover', [App\Http\Controllers\CoversController::class, 'checkCoverStatus'])->name('CheckCover');
-    Route::get('/checklanguage', [App\Http\Controllers\LanguagesController::class, 'checkLanguageStatus'])->name('CheckLanguage');
     Route::post('/getcover', [App\Http\Controllers\CoversController::class, 'GetCover'])->name('GetCover');
+
     Route::post('/getlanguage', [App\Http\Controllers\PaiementController::class, 'GetLanguage'])->name('GetLanguage');
+    Route::get('/paiement', [App\Http\Controllers\PaiementController::class, 'create'])->name('paiement');
 
 
 });

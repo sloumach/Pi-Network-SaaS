@@ -9,6 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use App\Models\CoverLetter;
 
 
 class GenerateCoverLetterJob implements ShouldQueue
@@ -16,6 +17,7 @@ class GenerateCoverLetterJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $name;
+    protected $user_id;
     protected $company;
     protected $position;
     protected $version;
@@ -25,9 +27,10 @@ class GenerateCoverLetterJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($name, $company, $position, $version)
+    public function __construct($name, $company, $position, $version,$user_id)
     {
         $this->name = $name;
+        $this->user_id = $user_id;
         $this->company = $company;
         $this->position = $position;
         $this->version = $version;
@@ -42,10 +45,24 @@ class GenerateCoverLetterJob implements ShouldQueue
     {
         // Appeler la fonction generateCoverLetter avec les paramètres fournis
         $generatedText = $this->generateCoverLetter($this->name, $this->company, $this->position, $this->version);
+        if ($generatedText!="off") {
 
-        // Faire ce que vous voulez avec le texte généré, comme l'enregistrer dans la base de données, l'envoyer par email, etc.
-        // Par exemple, si vous voulez enregistrer le texte généré dans la base de données, vous pouvez faire quelque chose comme ça :
-        // Model::create(['generated_text' => $generatedText]);
+                $coverLetter = new CoverLetter;
+                $coverLetter->user_id = $this->user_id; // Utilisez l'ID de l'utilisateur connecté
+                $coverLetter->letter = $generatedText;
+                $coverLetter->status = "completed";
+                $coverLetter->save();
+
+        } else {
+
+                $coverLetter = new CoverLetter;
+                $coverLetter->user_id = Auth::id(); // Utilisez l'ID de l'utilisateur connecté
+                $coverLetter->letter = "problem with IA";
+                $coverLetter->status = "error";
+                $coverLetter->save();
+        }
+
+
     }
 
     /**
@@ -68,7 +85,7 @@ class GenerateCoverLetterJob implements ShouldQueue
             $response = $client->post('https://api.openai.com/v1/chat/completions', [
                 'headers' => [
                     'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $OPENAI_API_KEY, // Remplacez $OPENAI_API_KEY par votre clé API OpenAI
+                    'Authorization' => 'Bearer ' . $OPENAI_API_KEY,
                 ],
                 'json' => [
                     'model' => 'gpt-3.5-turbo',
@@ -95,9 +112,11 @@ class GenerateCoverLetterJob implements ShouldQueue
             $text = str_replace('"""', '', $text);
             // Supprimer les sauts de ligne
             $text = str_replace("\n", '', $text);
+            return $text;
 
 
         } catch (RequestException $e) {
+            return "off";
 
         }
     }
