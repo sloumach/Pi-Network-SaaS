@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CoverLetter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HistoriquesController extends Controller
 {
@@ -10,9 +12,17 @@ class HistoriquesController extends Controller
     {
         return view ('historiqueslanguages');
     }
-    public function historiqueCovers()
+    public function historiqueCovers(Request $request)
     {
-        return view ('historiquescovers');
+        $userID = Auth::id(); // Récupère l'ID de l'utilisateur connecté
+        $cover_id=$request->cover_id;
+        //$coverletters = CoverLetter::where('user_id', $userID)->findOrfail();
+        //$coverletters = CoverLetter::where('user_id', Auth::id())->findOrFail($cover_id);
+        $coverletters = CoverLetter::where('user_id', $userID)->get();
+
+
+        //return view ('historiquescovers');
+        return view('historiquescovers', compact('coverletters'));
 
     }
 

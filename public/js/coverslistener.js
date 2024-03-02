@@ -9,27 +9,28 @@ $(document).ready(function() {
             type: "GET",
             data: { recordId: "3" }, // Remplacer ID_DU_RECORD_A_VERIFIER par l'identifiant de l'enregistrement à vérifier
             success: function(response) {
-
+                console.log(response);
                 // Traitement de la réponse
                 if (response === "in progress") {
                     // Faire quelque chose si l'enregistrement est en cours de traitement
                 } else if (response === "failed") {
                     // Faire quelque chose si le traitement de l'enregistrement a échoué
                     clearInterval(interval); // Arrêter l'exécution périodique
-                } else if (response === "done") {
+                } else if (response === "completed") {
                     // Faire quelque chose si le traitement de l'enregistrement est terminé
                     clearInterval(interval); // Arrêter l'exécution périodique
                 } else {
                     // Gérer d'autres cas si nécessaire
+                    console.log(response);
                 }
             },
             error: function(xhr, status, error) {
-                console.error(error); // Gérer les erreurs
+                console.log(error); // Gérer les erreurs
             }
         });
     }
 
     // Appeler la fonction pour vérifier périodiquement l'état de l'enregistrement
-    var interval = setInterval(checkRecordStatus, 2000); // Vérifier toutes les 5 secondes (ajustez selon vos besoins)
+    var interval = setInterval(checkRecordStatus, 9000); // Vérifier toutes les 5 secondes (ajustez selon vos besoins)
 });
 

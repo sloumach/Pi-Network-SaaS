@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Jobs\GenerateCoverLetterJob;
 use GuzzleHttp\Client;
+use App\Models\CoverLetter;
+use Illuminate\Http\Request;
+use App\Jobs\GenerateCoverLetterJob;
+use Illuminate\Support\Facades\Auth;
 
 class CoversController extends Controller
 {
@@ -72,7 +73,7 @@ class CoversController extends Controller
         $recordId = $request->input('recordId');
 
         // Récupérer l'enregistrement correspondant dans la base de données
-        $record = Exemple::find($recordId);
+        $record = CoverLetter::find($recordId);
 
         // Vérifier l'état de l'enregistrement et renvoyer la réponse appropriée
         if ($record) {

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\PlansController;
 use App\Http\Controllers\PaiementController;
 use App\Http\Controllers\LanguagesController;
@@ -43,8 +44,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/checkcover', [App\Http\Controllers\CoversController::class, 'checkCoverStatus'])->name('CheckCover');
     Route::post('/getcover', [App\Http\Controllers\CoversController::class, 'GetCover'])->name('GetCover');
 
+    Route::post('/saveCover', [App\Http\Controllers\UserController::class, 'saveCover'])->name('saveCover');
+
     Route::post('/getlanguage', [App\Http\Controllers\PaiementController::class, 'GetLanguage'])->name('GetLanguage');
     Route::get('/paiement', [App\Http\Controllers\PaiementController::class, 'create'])->name('paiement');
+
+    Route::get('/editor/{id}', [UserController::class, 'editor'])->name('editor');
 
 
 });
