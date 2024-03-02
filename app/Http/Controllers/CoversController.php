@@ -24,6 +24,11 @@ class CoversController extends Controller
             'company' => 'required|string|max:255',
             'position' => 'required|string|max:255',
         ]);
+        $coverLetter = new CoverLetter;
+                $coverLetter->user_id = Auth::id(); // Utilisez l'ID de l'utilisateur connecté
+
+                $coverLetter->status = "in progress";
+                $coverLetter->save();
 
         /* $response = $client->post('https://api.openai.com/v1/chat/completions', [
             'headers' => [
@@ -60,7 +65,7 @@ class CoversController extends Controller
 
         /* $user_id = Auth::id(); */
 
-        GenerateCoverLetterJob::dispatch($validatedData['name'], $validatedData['company'], $validatedData['position'], 'gpt-3.5-turbo',Auth::id());
+        GenerateCoverLetterJob::dispatch($validatedData['name'], $validatedData['company'], $validatedData['position'], 'gpt-3.5-turbo',Auth::id(),$coverLetter->id);
 
         // Retourner la réponse ou rediriger vers une autre page avec le résultat
         return redirect()->route('historiquescovers');
@@ -70,17 +75,17 @@ class CoversController extends Controller
     public function checkCoverStatus(Request $request)
     {
         // Récupérer l'identifiant de l'enregistrement à vérifier à partir de la requête AJAX
-        $recordId = $request->input('recordId');
-
+        $recordId = $request->recordId;
         // Récupérer l'enregistrement correspondant dans la base de données
         $record = CoverLetter::find($recordId);
-
-        // Vérifier l'état de l'enregistrement et renvoyer la réponse appropriée
-        if ($record) {
-            return response()->json($record->status); // Supposons que le statut est stocké dans une colonne "status"
-        } else {
-            return response()->json("not_found"); // Retourner "not_found" si l'enregistrement n'est pas trouvé
+        $coverLetters = CoverLetter::whereIn('id', $recordId)->get();
+        $coverLetterData = [];
+        foreach ($coverLetters as $coverLetter) {
+            $coverLetterData[$coverLetter->id] = $coverLetter->status;
         }
+        return $coverLetterData;
+
+
     }
 
 }

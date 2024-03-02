@@ -9,11 +9,11 @@ class CoverLetter extends Model
 {
     use HasFactory;
     protected $table='coverletters';
-    protected $fillable = [
+    /* protected $fillable = [
         'user_id',
         'letter',
         'status',
-    ];
+    ]; */
 
     public function user()
     {

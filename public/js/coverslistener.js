@@ -3,34 +3,63 @@ console.log('test');
 
 $(document).ready(function() {
     // Fonction pour vérifier l'état de l'enregistrement périodiquement
+    var interval = setInterval(checkRecordStatus, 9000);
     function checkRecordStatus() {
-        $.ajax({
-            url: "/checkcover", // Route vers la méthode du contrôleur
-            type: "GET",
-            data: { recordId: "3" }, // Remplacer ID_DU_RECORD_A_VERIFIER par l'identifiant de l'enregistrement à vérifier
-            success: function(response) {
-                console.log(response);
-                // Traitement de la réponse
-                if (response === "in progress") {
-                    // Faire quelque chose si l'enregistrement est en cours de traitement
-                } else if (response === "failed") {
-                    // Faire quelque chose si le traitement de l'enregistrement a échoué
-                    clearInterval(interval); // Arrêter l'exécution périodique
-                } else if (response === "completed") {
-                    // Faire quelque chose si le traitement de l'enregistrement est terminé
-                    clearInterval(interval); // Arrêter l'exécution périodique
-                } else {
-                    // Gérer d'autres cas si nécessaire
-                    console.log(response);
+        var divs = document.querySelectorAll('[id^="spinner-"]');
+                var ids = [];
+                for (var i = 0; i < divs.length; i++) {
+                var id = divs[i].id.replace('spinner-', '');
+                ids.push(id);
                 }
-            },
-            error: function(xhr, status, error) {
-                console.log(error); // Gérer les erreurs
-            }
-        });
+                if (ids.length !==0) {
+
+
+                    $.ajax({
+                        url: "/checkcover", // Route vers la méthode du contrôleur
+                        type: "GET",
+                        data: { recordId: ids }, // Remplacer ID_DU_RECORD_A_VERIFIER par l'identifiant de l'enregistrement à vérifier
+
+                        success: function(response) {
+                            for (var id in response) {
+                                var status = response[id];
+
+                                if (status === 'completed') {
+                                var spinnerDiv = document.querySelector('#spinner-' + id);
+                                if (spinnerDiv) {
+                                    var html = '<a href="editor/' + id + '" class="btn btn-success border-0" style="background-color: purple">' +
+                                            'Show' +
+                                            '</a>';
+                                    spinnerDiv.insertAdjacentHTML('beforebegin', html);
+                                    spinnerDiv.remove();
+
+
+
+
+                                }
+                                }
+                            }
+                            // Traitement de la réponse
+                            /* if (response === "failed") {
+                                    // Faire quelque chose si le traitement de l'enregistrement a échoué
+                                    clearInterval(interval); // Arrêter l'exécution périodique
+                                } else if (response === "completed") {
+                                    // Faire quelque chose si le traitement de l'enregistrement est terminé
+                                    clearInterval(interval); // Arrêter l'exécution périodique
+                                } else {
+                                    // Gérer d'autres cas si nécessaire
+
+                                } */
+                        },
+                        error: function(xhr, status, error) {
+                            console.log(error); // Gérer les erreurs
+                        }
+                    });
+                } else {
+                    clearInterval(interval);
+                }
     }
 
     // Appeler la fonction pour vérifier périodiquement l'état de l'enregistrement
-    var interval = setInterval(checkRecordStatus, 9000); // Vérifier toutes les 5 secondes (ajustez selon vos besoins)
+     // Vérifier toutes les 5 secondes (ajustez selon vos besoins)
 });
 

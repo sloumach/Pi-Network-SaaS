@@ -25,12 +25,28 @@
                             <tr>
                                 <th scope="row" class="text-center" >{{ $counter }}</th>
                                 <td class="text-center">{{ substr($cover->letter, 0, 90) }}...</td>
-
+                                @if ($cover->status != "error")
                                 <td class="text-center" >{{ $cover->status }}</td>
-                                <td class="text-center" >
+                                @else
+                                <td class="text-center" >Error while générating, due to high demand</td>
+
+                                @endif
+
+                                <td class="text-center">
+                                    @if ($cover->status == "in progress"  )
+
+                                    <div  id="spinner-{{ $cover->id }}" class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                      </div>
+
+                                    @endif
+                                    @if ($cover->status == "completed"  )
+
                                     <a href="{{ route('editor', ['id' => $cover->id]) }}" class="btn btn-success border-0" style="background-color: purple">
                                         {{ __('Show') }}
                                     </a>
+
+                                    @endif
                                 </td>
                               </tr>
                                 @php

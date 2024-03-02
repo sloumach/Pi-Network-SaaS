@@ -23,19 +23,21 @@ class GenerateCoverLetterJob implements ShouldQueue
     protected $company;
     protected $position;
     protected $version;
+    protected $cover_id;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($name, $company, $position, $version,$user_id)
+    public function __construct($name, $company, $position, $version,$user_id,$cover_id)
     {
         $this->name = $name;
         $this->user_id = $user_id;
         $this->company = $company;
         $this->position = $position;
         $this->version = $version;
+        $this->cover_id = $cover_id;
     }
 
     /**
@@ -99,21 +101,23 @@ class GenerateCoverLetterJob implements ShouldQueue
                 // Supprimer les sauts de ligne
                 $text = str_replace("\n", '', $text);
                 // Traitement du résultat
-                $coverLetter = new CoverLetter;
+                //$coverLetter = CoverLetter::where('id', $this->cover_id)->findOrfail();
+                $coverLetter = CoverLetter::where('id', $this->cover_id)->firstOrFail();
+
                 $coverLetter->user_id = $this->user_id; // Utilisez l'ID de l'utilisateur connecté
                 $coverLetter->letter = $text;
                 $coverLetter->status = "completed";
                 $coverLetter->save();
             }
         } catch (GuzzleException $e) {
-            $coverLetter = new CoverLetter;
+            $coverLetter = CoverLetter::where('id', $this->cover_id)->firstOrFail();
                 $coverLetter->user_id = $this->user_id; // Utilisez l'ID de l'utilisateur connecté
                 $coverLetter->letter = $e->getMessage();
                 $coverLetter->status = "error";
                 $coverLetter->save();
             // Gérer l'erreur comme souhaité
         } catch (\Exception $e) {
-            $coverLetter = new CoverLetter;
+            $coverLetter = CoverLetter::where('id', $this->cover_id)->firstOrFail();
                 $coverLetter->user_id = $this->user_id; // Utilisez l'ID de l'utilisateur connecté
                 $coverLetter->letter = $e->getMessage();
                 $coverLetter->status = "error";
