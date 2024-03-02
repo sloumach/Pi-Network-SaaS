@@ -10,11 +10,16 @@
 
             <div class="col col-lg-8 col-md-8 col-sm-8 m-2 " align="center">
                 <div class="card">
-                    <div class="card-header">{{ __('Cover Letter') }}</div>
+                    <div class="card-header">{{ __('Language article') }}</div>
                     <button class="btn btn-success" id="save-button" href="">save</button>
 
                     <div class="card-body">
-                        <div class="my-editor" id="my-editor" placeholder="Your text as placeholder">{{ $cover->letter }}</div>
+                        <div class="my-editor" id="my-editor" placeholder="Your text as placeholder">
+                            @if ($type == 'lang')
+                            {{ $data->article }}</div>
+                            @else
+                            {{ $data->letter }}</div>
+                            @endif
 
                     </div>
                 </div>
@@ -45,17 +50,48 @@ $(document).ready(function() {
             }
 
         });
-        let id= "{{ $cover_id }}"
+        let id= "{{ $data_id }}"
         $('#save-button').click(function(event) {
 
             let cover=$('#my-editor').trumbowyg('html');
             let link = "{{ route('saveCover') }}";
+            let type = "{{ $type }}";
             let token = $('meta[name="csrf-token"]').attr('content');
-            $.ajax({
+            if (type =='cover') {
+                $.ajax({
+                    url: link, // URL de votre route ou endpoint
+                    method: 'POST', // Méthode de requête (POST, GET, etc.)
+                    data: {
+                        cover:cover,
+                        type:type,
+                        cover_id:id,
+                        "_token": token
+
+
+                    },
+                    success: function(response) {
+                        // Code à exécuter en cas de succès de la requête
+                        console.log(response);
+                        toastr.success('Article enregistré', {
+                        timeOut: 5000
+                        });
+
+                    },
+                    error: function(xhr, status, error) {
+                        // Code à exécuter en cas d'erreur de la requête
+                        console.log(error);
+                        toastr.error('erreur d\'enregistrement', {
+                        timeOut: 5000
+                        });
+                    }
+                });
+            } else {
+                $.ajax({
                 url: link, // URL de votre route ou endpoint
                 method: 'POST', // Méthode de requête (POST, GET, etc.)
                 data: {
                     cover:cover,
+                    type:type,
                     cover_id:id,
                     "_token": token
 
@@ -77,6 +113,8 @@ $(document).ready(function() {
                     });
                 }
             });
+            }
+
         });
 
         var divElement = document.getElementById('my-editor');

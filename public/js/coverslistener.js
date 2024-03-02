@@ -7,6 +7,7 @@ $(document).ready(function() {
     function checkRecordStatus() {
         var divs = document.querySelectorAll('[id^="spinner-"]');
                 var ids = [];
+                var types = "cover";
                 for (var i = 0; i < divs.length; i++) {
                 var id = divs[i].id.replace('spinner-', '');
                 ids.push(id);
@@ -26,7 +27,7 @@ $(document).ready(function() {
                                 if (status === 'completed') {
                                 var spinnerDiv = document.querySelector('#spinner-' + id);
                                 if (spinnerDiv) {
-                                    var html = '<a href="editor/' + id + '" class="btn btn-success border-0" style="background-color: purple">' +
+                                    var html = '<a href="editor/' + id + '?type='+types+ '" class="btn btn-success border-0" style="background-color: purple">' +
                                             'Show' +
                                             '</a>';
                                     spinnerDiv.insertAdjacentHTML('beforebegin', html);

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Language;
 use Illuminate\Http\Request;
 use App\Jobs\GenerateLanguageJob;
+use Illuminate\Support\Facades\Auth;
 
 class LanguagesController extends Controller
 {
@@ -15,12 +17,19 @@ class LanguagesController extends Controller
     {
         // Valider les données du formulaire
         $validatedData = $request->validate([
-            'topic' => 'required|string',
+            'subject' => 'required|string',
         ]);
-        $version="model de gpt";
+        $langArticle = new Language;
+            $langArticle->user_id = Auth::id(); // Utilisez l'ID de l'utilisateur connecté
+            $langArticle->tcf_ielts = "ielts";
+            $langArticle->topic = $validatedData['subject'];
+            $langArticle->level = "b2";
+            $langArticle->status = "in progress";
+            $langArticle->save();
+
         //ici on enregistre dans la table et on envoi le id de l'enregistrement dans le job
 
-        GenerateLanguageJob::dispatch($validatedData['topic'], $version);
+        GenerateLanguageJob::dispatch($validatedData['subject'], 'ielts', 'b2', 'gpt-3.5-turbo',Auth::id(),$langArticle->id);
 
         // Retourner la réponse ou rediriger vers une autre page avec le résultat
         return redirect()->route('historiqueslanguages');
@@ -30,16 +39,13 @@ class LanguagesController extends Controller
     public function checkLanguageStatus(Request $request)
     {
         // Récupérer l'identifiant de l'enregistrement à vérifier à partir de la requête AJAX
-        $recordId = $request->input('recordId');
-        return response()->json($recordId);
+        $recordId = $request->recordId;
         // Récupérer l'enregistrement correspondant dans la base de données
-        $record = Exemple::find($recordId);
-
-        // Vérifier l'état de l'enregistrement et renvoyer la réponse appropriée
-        if ($record) {
-            return response()->json($record->status); // Supposons que le statut est stocké dans une colonne "status"
-        } else {
-            return response()->json("not_found"); // Retourner "not_found" si l'enregistrement n'est pas trouvé
+        $coverLetters = Language::whereIn('id', $recordId)->get();
+        $coverLetterData = [];
+        foreach ($coverLetters as $coverLetter) {
+            $coverLetterData[$coverLetter->id] = $coverLetter->status;
         }
+        return $coverLetterData;
     }
 }

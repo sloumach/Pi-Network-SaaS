@@ -6,44 +6,61 @@
 
 
             <div class="col col-lg-12 col-md-8 col-sm-8 m-2 " align="center">
-                <div class="card-header">{{ __('Subject') }}</div>
                 <table class="table table-striped table-hover">
 
-                        <thead>
-                          <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">First</th>
-                            <th scope="col">Last</th>
-                            <th scope="col">Handle</th>
-                          </tr>
-                        </thead>
+                    <thead>
+                      <tr>
+                        <th scope="col" class="col-1 text-center"></th>
+                        <th scope="col" class="col-2 text-center">Company</th>
+                        <th scope="col" class="col-2 text-center">Candidate Name</th>
+                        <th scope="col" class="col-1 text-center">options</th>
+                      </tr>
+                    </thead>
                         <tbody>
-                          <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                            <td><button type="submit" class="btn btn-success">
+                            @php
+                                $counter = 1;
+                            @endphp
+                            @foreach ($articles as $article )
+                            <tr>
+                                <th scope="row" class="text-center" >{{ $counter }}</th>
+                                <td class="text-center">{{ substr($article->letter, 0, 90) }}...</td>
+                                @if ($article->status != "error")
+                                <td class="text-center" >{{ $article->status }}</td>
+                                @else
+                                <td class="text-center" >Error while générating, due to high demand</td>
+
+                                @endif
+
+                                <td class="text-center">
+                                    @if ($article->status == "in progress"  )
+
+                                    <div  id="spinner-{{ $article->id }}" class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                      </div>
+
+                                    @endif
+                                    @if ($article->status == "completed"  )
+
+                                    <a href="{{ route('editor', ['id' => $article->id,'type'=>$type]) }}" class="btn btn-success border-0" style="background-color: purple">
+                                        {{ __('Show') }}
+                                    </a>
+
+                                    @endif
+                                </td>
+                              </tr>
+                                @php
+                                    $counter++;
+                                @endphp
+                            @endforeach
+                          {{-- <tr>
+                            <th scope="row" class="text-center" >1</th>
+                            <td class="">MarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMarkMark</td>
+                            <td >OttoOttoOttoOttoOttoOttoOttoOttoOttoOttoOtto</td>
+                            <td ><button type="submit" class="btn btn-success border-0" style="background-color:purple">
                                 {{ __('Show') }}
                             </button></td>
-                          </tr>
-                          <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                            <td><button type="submit" class="btn btn-success">
-                                {{ __('Show') }}
-                            </button></td>
-                          </tr>
-                          <tr>
-                            <th scope="row">3</th>
-                            <td colspan="2">Larry the Bird</td>
-                            <td>@twitter</td>
-                            <td><button type="submit" class="btn btn-success">
-                                {{ __('Show') }}
-                            </button></td>
-                          </tr>
+                          </tr> --}}
+
                         </tbody>
                       </table>
                   </table>

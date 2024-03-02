@@ -2,28 +2,39 @@
 
 namespace App\Jobs;
 
+use GuzzleHttp\Client;
+use App\Models\Language;
 use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 
-class GenerateCoverLetterJob implements ShouldQueue
+class GenerateLanguageJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $name;
+
+    protected $topic;
+    protected $ielts_tcf;
+    protected $level;
     protected $version;
+    protected $user_id;
+    protected $article_id;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($topic,$version)
+    public function __construct($topic,$ielts_tcf,$level,$version,$user_id,$article_id)
     {
         $this->topic = $topic;
+        $this->ielts_tcf = $ielts_tcf;
+        $this->level = $level;
         $this->version = $version;
+        $this->user_id = $user_id;
+        $this->article_id = $article_id;
 
     }
 
@@ -34,12 +45,58 @@ class GenerateCoverLetterJob implements ShouldQueue
      */
     public function handle()
     {
-        // Appeler la fonction generateCoverLetter avec les paramètres fournis
-        $generatedText = $this->generateLanguage($this->topic,$this->version);
+        try {
+            $client = new Client();
+            // Clé API OpenAI
+            $OPENAI_API_KEY =env('OPENAI_KEY');
+            $response = $client->post('https://api.openai.com/v1/chat/completions', [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $OPENAI_API_KEY,
+                ],
+                'json' => [
+                    'model' => 'gpt-3.5-turbo',
+                    'messages' => [
+                        [
+                            'role' => 'system',
+                            'content' => 'vous etes un connaissant des testes de langues',
+                        ],
+                        [
+                            'role' => 'user',
+                            'content' => 'rédige un article pour le sujet "'.$this->topic.'", qui sera accepté dans un exament '.$this->ielts_tcf.', pour un niveau: "'.$this->level.' ',
+                        ],
+                    ],
+                ],
+            ]);
 
-        // Faire ce que vous voulez avec le texte généré, comme l'enregistrer dans la base de données, l'envoyer par email, etc.
-        // Par exemple, si vous voulez enregistrer le texte généré dans la base de données, vous pouvez faire quelque chose comme ça :
-        // Model::create(['generated_text' => $generatedText]);
+            if ($response->getStatusCode() == 200) {
+                $body = $response->getBody();
+                $data = json_decode($body, true);
+                $text = $data['choices'][0]['message']['content'];
+                // Supprimer les guillemets triples
+                $text = str_replace('"""', '', $text);
+                // Supprimer les sauts de ligne
+                $text = str_replace("\n", '', $text);
+                // Traitement du résultat
+                $article = Language::where('id', $this->article_id)->firstOrFail();
+                    $article->article = $text;
+                    $article->status = "completed";
+                    $article->save();
+            }
+        } catch (GuzzleException $e) {
+
+                $article = Language::where('id', $this->article_id)->firstOrFail();
+                $article->article = $e->getMessage();
+                $article->status = "error";
+                $article->save();
+            // Gérer l'erreur comme souhaité
+        } catch (\Exception $e) {
+            $article = Language::where('id', $this->article_id)->firstOrFail();
+                $article->article = $e->getMessage();
+                $article->status = "error";
+                $article->save();
+            // Gérer l'erreur comme souhaité
+        }
     }
 
     /**
@@ -49,36 +106,5 @@ class GenerateCoverLetterJob implements ShouldQueue
      * @param string $version
      * @return string
      */
-    private function generateLanguage($topic,$version)
-    {
-        // Initialisez un client Guzzle
-        $client = new Client();
 
-        // Clé API OpenAI
-        $apiKey = 'VOTRE_CLE_API_OPENAI';
-
-        // Corps de la requête à envoyer à l'API GPT de OpenAI
-        $requestData = [
-            'prompt' => "Dear Hiring Manager,\n\nI am writing to apply for the position of $position at $company. My name is $name and I am excited to bring my skills and experience to your team.\n\nSincerely,\n$name",
-            'model' => $version, // Spécifiez la version du modèle ici
-        ];
-        try {
-            // Exemple d'appel à l'API GPT de OpenAI avec Guzzle
-            $response = $client->post('https://api.openai.com/v1/completions', [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $apiKey,
-                    'Content-Type' => 'application/json',
-                ],
-                'json' => $requestData,
-            ]);
-
-            // Traitement de la réponse de l'API
-            $responseBody = json_decode($response->getBody(), true); // Convertir la réponse JSON en tableau associatif
-            $generatedText = $responseBody['choices'][0]['text']; // Extraire le texte généré par l'API
-            return $generatedText;
-
-        } catch (RequestException $e) {
-
-        }
-    }
 }

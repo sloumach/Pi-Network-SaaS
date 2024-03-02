@@ -36,6 +36,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/languages', [App\Http\Controllers\LanguagesController::class, 'create'])->name('languages');
     Route::get('/checklanguage', [App\Http\Controllers\LanguagesController::class, 'checkLanguageStatus'])->name('CheckLanguage');
+    Route::post('/getlanguage', [App\Http\Controllers\LanguagesController::class, 'GetLanguage'])->name('GetLanguage');
 
     Route::get('/historiquelanguages', [HistoriquesController::class, 'historiqueLanguages'])->name('historiqueslanguages');
     Route::get('/historiquecovers', [HistoriquesController::class, 'historiqueCovers'])->name('historiquescovers');
@@ -46,7 +47,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/saveCover', [App\Http\Controllers\UserController::class, 'saveCover'])->name('saveCover');
 
-    Route::post('/getlanguage', [App\Http\Controllers\PaiementController::class, 'GetLanguage'])->name('GetLanguage');
+
     Route::get('/paiement', [App\Http\Controllers\PaiementController::class, 'create'])->name('paiement');
 
     Route::get('/editor/{id}', [UserController::class, 'editor'])->name('editor');

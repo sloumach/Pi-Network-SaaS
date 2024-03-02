@@ -40,9 +40,9 @@
                                       </div>
 
                                     @endif
-                                    @if ($cover->status == "completed"  )
+                                    @if ($cover->status == "completed")
 
-                                    <a href="{{ route('editor', ['id' => $cover->id]) }}" class="btn btn-success border-0" style="background-color: purple">
+                                    <a href="{{ route('editor', ['id' => $cover->id,'type'=>$type]) }}" class="btn btn-success border-0" style="background-color: purple">
                                         {{ __('Show') }}
                                     </a>
 
