@@ -2,14 +2,16 @@
 
 namespace App\Jobs;
 
+use GuzzleHttp\Client;
+use App\Models\CoverLetter;
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
-use App\Models\CoverLetter;
 
 
 class GenerateCoverLetterJob implements ShouldQueue
@@ -41,10 +43,11 @@ class GenerateCoverLetterJob implements ShouldQueue
      *
      * @return void
      */
+
     public function handle()
     {
         // Appeler la fonction generateCoverLetter avec les paramètres fournis
-        $generatedText = $this->generateCoverLetter($this->name, $this->company, $this->position, $this->version);
+        /* $generatedText = $this->generateCoverLetter($this->name, $this->company, $this->position, $this->version);
         if ($generatedText!="off") {
 
                 $coverLetter = new CoverLetter;
@@ -52,16 +55,71 @@ class GenerateCoverLetterJob implements ShouldQueue
                 $coverLetter->letter = $generatedText;
                 $coverLetter->status = "completed";
                 $coverLetter->save();
-
         } else {
-
                 $coverLetter = new CoverLetter;
                 $coverLetter->user_id = Auth::id(); // Utilisez l'ID de l'utilisateur connecté
                 $coverLetter->letter = "problem with IA";
                 $coverLetter->status = "error";
                 $coverLetter->save();
-        }
+        } */
+        try {
+            $client = new Client();
+            // Clé API OpenAI
+            $OPENAI_API_KEY =env('OPENAI_KEY');
+            $response = $client->post('https://api.openai.com/v1/chat/completions', [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $OPENAI_API_KEY,
+                ],
+                'json' => [
+                    'model' => 'gpt-3.5-turbo',
+                    'messages' => [
+                        [
+                            'role' => 'system',
+                            'content' => 'Vous êtes un rédacteur des lettres de motivations',
+                        ],
+                        [
+                            'role' => 'user',
+                            'content' => 'rédige une lettre de motivation (Cover letter) pour l\'envoyer à une entreprise qui cherche un développeur php expérimenté.
+                            Voila les informations que tu as besoin pour la rédaction:
+                            Mon nom complet: "'.$this->name.'", l\'entreprise qu\'il souhaite la rejoindre: "'.$this->company.'"
+                            et la position demandé par l\'entreprise dans son annonce: "'.$this->position.'"
+                                . Rédacte directement la lettre, rien avant et rien après',
+                        ],
+                    ],
+                ],
+            ]);
 
+            if ($response->getStatusCode() == 200) {
+                $body = $response->getBody();
+                $data = json_decode($body, true);
+                $text = $data['choices'][0]['message']['content'];
+                // Supprimer les guillemets triples
+                $text = str_replace('"""', '', $text);
+                // Supprimer les sauts de ligne
+                $text = str_replace("\n", '', $text);
+                // Traitement du résultat
+                $coverLetter = new CoverLetter;
+                $coverLetter->user_id = $this->user_id; // Utilisez l'ID de l'utilisateur connecté
+                $coverLetter->letter = $text;
+                $coverLetter->status = "completed";
+                $coverLetter->save();
+            }
+        } catch (GuzzleException $e) {
+            $coverLetter = new CoverLetter;
+                $coverLetter->user_id = $this->user_id; // Utilisez l'ID de l'utilisateur connecté
+                $coverLetter->letter = $e->getMessage();
+                $coverLetter->status = "error";
+                $coverLetter->save();
+            // Gérer l'erreur comme souhaité
+        } catch (\Exception $e) {
+            $coverLetter = new CoverLetter;
+                $coverLetter->user_id = $this->user_id; // Utilisez l'ID de l'utilisateur connecté
+                $coverLetter->letter = $e->getMessage();
+                $coverLetter->status = "error";
+                $coverLetter->save();
+            // Gérer l'erreur comme souhaité
+        }
 
     }
 
