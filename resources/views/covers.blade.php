@@ -7,7 +7,7 @@
 
             <div class="col col-lg-8 col-md-8 col-sm-8 m-2 " align="center">
                 <div class="card">
-                    <div class="card-header">{{ __('Cover Letter') }}</div>
+                    <div class="card-header text-white" style="background-color: purple">{{ __('Cover Letter') }}</div>
 
                     <div class="card-body">
                         <form method="POST" action="{{ route('GetCover') }}">
@@ -42,7 +42,7 @@
 
                             <div class="row mb-0">
                                 <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-primary border-0" style="background-color: purple">
                                         {{ __('Get Cover Letter') }}
                                     </button>
                                 </div>

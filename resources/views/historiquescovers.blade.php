@@ -22,8 +22,8 @@
                                 $counter = 1;
                             @endphp
                             @foreach ($coverletters as $cover )
-                            <tr>
-                                <th scope="row" class="text-center" >{{ $counter }}</th>
+                            <tr >
+                                <th scope="row" class="text-center text-white" style="background-color: purple" >{{ $counter }}</th>
                                 <td class="text-center">{{ substr($cover->letter, 0, 90) }}...</td>
                                 @if ($cover->status != "error")
                                 <td class="text-center" >{{ $cover->status }}</td>

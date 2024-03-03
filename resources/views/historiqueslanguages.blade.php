@@ -22,7 +22,7 @@
                             @endphp
                             @foreach ($articles as $article )
                             <tr>
-                                <th scope="row" class="text-center" >{{ $counter }}</th>
+                                <th scope="row" class="text-center text-white" style="background-color: purple" >{{ $counter }}</th>
                                 <td class="text-center">{{ substr($article->letter, 0, 90) }}...</td>
                                 @if ($article->status != "error")
                                 <td class="text-center" >{{ $article->status }}</td>
