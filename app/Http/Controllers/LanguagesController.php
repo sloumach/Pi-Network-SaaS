@@ -18,21 +18,57 @@ class LanguagesController extends Controller
         // Valider les données du formulaire
         $validatedData = $request->validate([
             'subject' => 'required|string',
+            'exam' => 'required|string',
+            'level' => 'required|string',
         ]);
-        $langArticle = new Language;
-            $langArticle->user_id = Auth::id(); // Utilisez l'ID de l'utilisateur connecté
-            $langArticle->tcf_ielts = "ielts";
-            $langArticle->topic = $validatedData['subject'];
-            $langArticle->level = "b2";
-            $langArticle->status = "in progress";
-            $langArticle->save();
+        if ($validatedData['exam'] == 1) {
 
-        //ici on enregistre dans la table et on envoi le id de l'enregistrement dans le job
+            if ($user->available_tcf > 0) {
+                $langArticle = new Language;
+                    $langArticle->user_id = Auth::id(); // Utilisez l'ID de l'utilisateur connecté
+                    $langArticle->tcf_ielts = "TCF";
+                    $langArticle->topic = $validatedData['subject'];
+                    $langArticle->level = $validatedData['level'];
+                    $langArticle->status = "in progress";
+                    $langArticle->save();
 
-        GenerateLanguageJob::dispatch($validatedData['subject'], 'ielts', 'b2', 'gpt-3.5-turbo',Auth::id(),$langArticle->id);
+                //ici on enregistre dans la table et on envoi le id de l'enregistrement dans le job
 
-        // Retourner la réponse ou rediriger vers une autre page avec le résultat
-        return redirect()->route('historiqueslanguages');
+                GenerateLanguageJob::dispatch($validatedData['subject'], 'ielts', $validatedData['level'], 'gpt-3.5-turbo',Auth::id(),$langArticle->id);
+
+                $user->available_tcf -= 1;
+                $user->save();
+                toastr()->success('Génération en cour');
+                return redirect()->route('historiqueslanguages');
+            } else {
+                toastr()->error('vous devez acheter un pack');
+
+                return redirect()->back();
+            }
+        }
+        if ($validatedData['exam'] == 2) {
+            if ($user->available_ielts > 0) {
+                $langArticle = new Language;
+                    $langArticle->user_id = Auth::id(); // Utilisez l'ID de l'utilisateur connecté
+                    $langArticle->tcf_ielts = "IELTS";
+                    $langArticle->topic = $validatedData['subject'];
+                    $langArticle->level = $validatedData['level'];
+                    $langArticle->status = "in progress";
+                    $langArticle->save();
+
+                //ici on enregistre dans la table et on envoi le id de l'enregistrement dans le job
+
+                GenerateLanguageJob::dispatch($validatedData['subject'], 'ielts', $validatedData['level'], 'gpt-3.5-turbo',Auth::id(),$langArticle->id);
+
+                $user->available_ielts -= 1;
+                $user->save();
+                toastr()->success('Génération en cour');
+                return redirect()->route('historiqueslanguages');
+            } else {
+                toastr()->error('vous devez acheter un pack');
+                return redirect()->back();
+            }
+        }
     }
 
 
