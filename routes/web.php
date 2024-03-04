@@ -48,7 +48,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/saveCover', [App\Http\Controllers\UserController::class, 'saveCover'])->name('saveCover');
 
 
-    Route::get('/paiement', [App\Http\Controllers\PaiementController::class, 'create'])->name('paiement');
+    Route::get('/showpaiement/{id}', [App\Http\Controllers\PaiementController::class, 'create'])->name('paiement');
+    Route::post('/paiement', [App\Http\Controllers\PaiementController::class, 'create'])->name('confirmPaiement');
 
     Route::get('/editor/{id}', [UserController::class, 'editor'])->name('editor');
 

@@ -69,6 +69,7 @@ class LanguagesController extends Controller
                 return redirect()->back();
             }
         }
+        abort(404, "plan not found");
     }
 
 
