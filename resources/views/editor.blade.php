@@ -1,7 +1,18 @@
 @extends('layouts.app')
 @push('styles')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.27.3/ui/trumbowyg.min.css" integrity="sha512-Fm8kRNVGCBZn0sPmwJbVXlqfJmPC13zRsMElZenX6v721g/H7OukJd8XzDEBRQ2FSATK8xNF9UYvzsCtUpfeJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+    @keyframes blinkBorder {
+    0% { border-color: transparent; }
+    350% { border-color: #f8e250; }
+    70% { border-color: #ffee82; }
+    100% { border-color: transparent; }
+}
 
+#save-button {
+    animation: blinkBorder 2s infinite;
+}
+</style>
 @endpush
 @section('content')
 <div class="container ">
@@ -10,8 +21,14 @@
 
             <div class="col col-lg-8 col-md-8 col-sm-8 m-2 " align="center">
                 <div class="card">
-                    <div class="card-header">{{ __('Language article') }}</div>
-                    <button class="btn btn-success" id="save-button" href="">save</button>
+                    <div class="card-header" style="color:#f0d419;background-color: purple">{{ __('Language article') }}</div>
+                    <div class="row mt-1">
+                        <div class="col col-5"></div>
+                        <div class="col col-2">
+                            <button class="btn btn-success border-3" style="color:#f0d419;background-color: purple" id="save-button" href="">save</button>
+                        </div>
+                    </div>
+
 
                     <div class="card-body">
                         <div class="my-editor" id="my-editor" placeholder="Your text as placeholder">

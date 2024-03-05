@@ -82,6 +82,12 @@ class GenerateLanguageJob implements ShouldQueue
                     $article->article = $text;
                     $article->status = "completed";
                     $article->save();
+            } else{
+                $article = Language::where('id', $this->article_id)->firstOrFail();
+                $article->article = $e->getMessage();
+                $article->status = "error";
+                $article->save();
+
             }
         } catch (GuzzleException $e) {
 

@@ -20,7 +20,9 @@ class UserController extends Controller
             $type = 'cover';
             $data = CoverLetter::where('user_id', Auth::id())->findOrFail($request->id);
         }
-
+        if ($data->status =="error") {
+            abort(404);
+        }
         $data_id = $data->id;
         return view('editor', compact('data','data_id','type'));
     }
@@ -29,6 +31,7 @@ class UserController extends Controller
     {
         if ($request->type =='cover') {
             $cover = CoverLetter::where('user_id', Auth::id())->findOrFail($request->cover_id);
+
         //$NewCover = strip_tags($request->cover);
         $extractedContent = preg_replace('/<[\/]?p[^>]*>/', '', $request->cover);
 

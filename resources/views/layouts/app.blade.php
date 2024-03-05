@@ -8,10 +8,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+
     @stack('styles')
 
 
@@ -35,26 +36,26 @@
                 <div class="collapse navbar-collapse mx-2"  id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     @auth
-                    <ul class="navbar-nav me-auto mx-5 text-white" style=" ">
+                    <ul class="navbar-nav me-auto mx-5 " style=" ">
                         <li class="nav-item mx-3">
-                            <a class="nav-link text-white" style=""  href="{{ route('plans') }}">{{ __('Plans') }}</a>
+                            <a class="nav-link " style="color:#f0d419; "  href="{{ route('plans') }}">{{ __('Plans') }}</a>
                         </li>
                         <li class="nav-item mx-3">
-                            <a class="nav-link text-white" style="" href="{{ route('languages') }}">{{ __('Langage exams') }}</a>
+                            <a class="nav-link " style="color:#f0d419; " href="{{ route('languages') }}">{{ __('Langage exams') }}</a>
                         </li>
                         <li class="nav-item mx-3">
-                            <a class="nav-link text-white" style="" href="{{ route('covers') }}">{{ __('Cover Letter') }}</a>
+                            <a class="nav-link " style="color:#f0d419; " href="{{ route('covers') }}">{{ __('Cover Letter') }}</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" style="" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle " style="color:#f0d419; " href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 {{ __('Historiques') }}
                             </a>
 
-                            <div class="dropdown-menu dropdown-menu-end" style="background-color:purple"  aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item text-white" style="background-color:purple" href="{{ route('historiqueslanguages') }}">
+                            <div class="dropdown-menu dropdown-menu-end" style="color:#f0d419; background-color:purple"  aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item " style="color:#f0d419; background-color:purple" href="{{ route('historiqueslanguages') }}">
                                     {{ __('Languages') }}
                                 </a>
-                                <a class="dropdown-item text-white" style="background-color:purple" href="{{ route('historiquescovers') }}">
+                                <a class="dropdown-item " style="color:#f0d419; background-color:purple" href="{{ route('historiquescovers') }}">
                                     {{ __('Covers') }}
                                 </a>
 
@@ -64,19 +65,19 @@
                     </ul>
                     <ul class="navbar-nav  text-white">
                     <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle text-white"  href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle " style="color:#f0d419;"  href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             {{ Auth::user()->name }}
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-end text-center" >
-                            <a class="dropdown-item text-white mb-3" style="background-color:purple" href="{{ route('logout') }}"
+                            <a class="dropdown-item  mb-3" style="color:#f0d419; background-color:purple" href="{{ route('logout') }}"
                                onclick="event.preventDefault();
                                              document.getElementById('logout-form').submit();">
                                 {{ __('Logout') }}
                             </a>
-                            <a class="dropdown-item text-white" style="background-color:purple">TCF: {{ $user->available_tcf }}</a>
-                            <a class="dropdown-item text-white" style="background-color:purple">IELTS: {{ $user->available_ielts }}</a>
-                            <a class="dropdown-item text-white" style="background-color:purple">Letters: {{ $user->available_lettres }}</a>
+                            <a class="dropdown-item " style="color:#f0d419; background-color:purple">TCF: {{ $user->available_tcf }}</a>
+                            <a class="dropdown-item " style="color:#f0d419; background-color:purple">IELTS: {{ $user->available_ielts }}</a>
+                            <a class="dropdown-item " style="color:#f0d419; background-color:purple">Letters: {{ $user->available_lettres }}</a>
                         </div>
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
