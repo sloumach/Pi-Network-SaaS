@@ -6,6 +6,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PlansController;
 use App\Http\Controllers\PaiementController;
+
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\LanguagesController;
 use App\Http\Controllers\HistoriquesController;
 
@@ -21,7 +23,9 @@ use App\Http\Controllers\HistoriquesController;
 */
 
 
-Auth::routes();
+/* Auth::routes(); */
+Auth::routes(['verify' => true]);
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -30,7 +34,8 @@ Route::get('/services', function () {
     return view('nosservices');
 })->name('services');
 
-Route::middleware(['auth'])->group(function () {
+
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/plans', [App\Http\Controllers\PlansController::class, 'create'])->name('plans');
 
