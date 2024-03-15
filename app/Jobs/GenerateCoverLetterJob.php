@@ -22,22 +22,26 @@ class GenerateCoverLetterJob implements ShouldQueue
     protected $user_id;
     protected $company;
     protected $position;
+    protected $projects;
     protected $version;
     protected $cover_id;
+    protected $coverlanguage;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($name, $company, $position, $version,$user_id,$cover_id)
+    public function __construct($name, $company, $position, $projects, $version,$user_id,$cover_id,$coverlanguage)
     {
         $this->name = $name;
         $this->user_id = $user_id;
         $this->company = $company;
         $this->position = $position;
+        $this->projects = $projects;
         $this->version = $version;
         $this->cover_id = $cover_id;
+        $this->coverlanguage = $coverlanguage;
     }
 
     /**
@@ -82,10 +86,10 @@ class GenerateCoverLetterJob implements ShouldQueue
                         ],
                         [
                             'role' => 'user',
-                            'content' => 'rédige une lettre de motivation (Cover letter) pour l\'envoyer à une entreprise qui cherche un développeur php expérimenté.
+                            'content' => 'rédige une longue lettre de motivation (plus que 350 mots c\'est important!) (Cover letter) bien rédiger en respectant les structures, en langue:" '.$this->coverlanguage.'", pour l\'envoyer à une entreprise qui cherche un: '.$this->position.'
                             Voila les informations que tu as besoin pour la rédaction:
-                            Mon nom complet: "'.$this->name.'", l\'entreprise qu\'il souhaite la rejoindre: "'.$this->company.'"
-                            et la position demandé par l\'entreprise dans son annonce: "'.$this->position.'"
+                            Mon nom complet ( nom et prénom ): "'.$this->name.'". l\'entreprise qui a posé l\'annonce de l\'offre de travail est: "'.$this->company.'", et les projet que j\'ai réalisé ainsi que mes expériences: '.$this->projects.'.
+                            la position demandé par l\'entreprise dans son annonce est : "'.$this->position.'"
                                 . Rédacte directement la lettre, rien avant et rien après',
                         ],
                     ],
@@ -106,6 +110,7 @@ class GenerateCoverLetterJob implements ShouldQueue
 
                 $coverLetter->user_id = $this->user_id; // Utilisez l'ID de l'utilisateur connecté
                 $coverLetter->letter = $text;
+                $coverLetter->letter_language = $this->coverlanguage;
                 $coverLetter->status = "completed";
                 $coverLetter->save();
             }
@@ -113,12 +118,14 @@ class GenerateCoverLetterJob implements ShouldQueue
             $coverLetter = CoverLetter::where('id', $this->cover_id)->firstOrFail();
                 $coverLetter->user_id = $this->user_id; // Utilisez l'ID de l'utilisateur connecté
                 $coverLetter->letter = $e->getMessage();
+                $coverLetter->letter_language = $this->coverlanguage;
                 $coverLetter->status = "error";
                 $coverLetter->save();
             // Gérer l'erreur comme souhaité
         } catch (\Exception $e) {
             $coverLetter = CoverLetter::where('id', $this->cover_id)->firstOrFail();
                 $coverLetter->user_id = $this->user_id; // Utilisez l'ID de l'utilisateur connecté
+                $coverLetter->letter_language = $this->coverlanguage;
                 $coverLetter->letter = $e->getMessage();
                 $coverLetter->status = "error";
                 $coverLetter->save();
@@ -158,7 +165,7 @@ class GenerateCoverLetterJob implements ShouldQueue
                         ],
                         [
                             'role' => 'user',
-                            'content' => 'rédige une lettre de motivation (Cover letter) pour l\'envoyer à une entreprise qui cherche un développeur php expérimenté.
+                            'content' => 'rédige une lettre de motivation (Cover letter) en langue: '.$this->coverlanguage.' pour l\'envoyer à une entreprise qui cherche un développeur php expérimenté.
                             Voila les informations que tu as besoin pour la rédaction:
                             Mon nom complet: "'.$name.'", l\'entreprise qu\'il souhaite la rejoindre: "'.$company.'"
                             et la position demandé par l\'entreprise dans son annonce: "'.$position.'"

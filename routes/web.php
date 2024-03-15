@@ -35,7 +35,7 @@ Route::get('/services', function () {
 })->name('services');
 
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified','throttle:30,1'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/plans', [App\Http\Controllers\PlansController::class, 'create'])->name('plans');
 

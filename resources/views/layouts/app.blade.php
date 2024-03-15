@@ -16,10 +16,19 @@
     @stack('styles')
 
 
+<style>
+    .img-flag {
+  width: 20px;
+  height: 15px;
+  margin-right: 10px;
+}
+
+</style>
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link href="{{ URL::asset('plugins/toastr/toastr.min.css') }}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
 </head>
 <body>

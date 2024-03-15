@@ -39,6 +39,25 @@
 
                                 </div>
                             </div>
+                            <div class="row mb-3">
+                                <label for="role" class="col-md-4 col-form-label text-md-end">{{ __('Projects') }}</label>
+
+                                <div class="col-md-6">
+                                    <textarea rows="4" cols="50"  class="form-control " name="projects"  required  autofocus> </textarea>
+
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="role" class="col-md-4 col-form-label text-md-end">{{ __('Cover Language') }}</label>
+
+                                <div class="col-md-6">
+                                    <select id="language" class="form-control " name="coverlanguage" data-placeholder="{{ __('Select input language') }}" >
+                                        @foreach ($langs as $language)
+                                            <option value="{{ $language->language_code }}" data-img="{{ URL::asset($language->language_flag) }}" > {{ $language->language }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
 
                             <div class="row mb-0">
                                 <div class="col-md-6 offset-md-4">
@@ -56,4 +75,28 @@
     </div>
 
 </div>
+@push('scripts')
+<!-- Inclusion de Select2 CSS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+    <script>
+    $(document).ready(function() {
+        function formatState (state) {
+            if (!state.id) {
+                return state.text;
+            }
+
+            var baseUrl = "/img/flags";
+            var $state = $(
+                '<span><img src="' + $(state.element).data('img') + '" class="img-flag" /> ' + state.text + '</span>'            );
+            return $state;
+            };
+
+            $("#language").select2({
+            templateResult: formatState,
+            templateSelection: formatState
+            });
+    });
+    </script>
+@endpush
 @endsection

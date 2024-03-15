@@ -20,7 +20,11 @@ class CoversController extends Controller
             'name' => 'required|string|max:255',
             'company' => 'required|string|max:255',
             'position' => 'required|string|max:255',
+            'coverlanguage' => 'required|string|max:25',
+            'projects' => 'required|string|max:255',
+
         ]);
+
         $user = Auth::user();
         if ($user->available_lettres > 0) {
 
@@ -64,16 +68,13 @@ class CoversController extends Controller
 
             /* $user_id = Auth::id(); */
 
-            GenerateCoverLetterJob::dispatch($validatedData['name'], $validatedData['company'], $validatedData['position'], 'gpt-3.5-turbo', Auth::id(), $coverLetter->id);
+            GenerateCoverLetterJob::dispatch($validatedData['name'], $validatedData['company'], $validatedData['position'], $validatedData['projects'], 'gpt-3.5-turbo', Auth::id(), $coverLetter->id, $validatedData['coverlanguage']);
             $user->available_lettres -= 1;
             $user->save();
             toastr()->success('Génération en cour');
-
-            // Retourner la réponse ou rediriger vers une autre page avec le résultat
             return redirect()->route('historiquescovers');
         } else {
             toastr()->error('vous devez acheter un pack');
-
             return redirect()->back();
         }
     }
