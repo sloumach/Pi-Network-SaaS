@@ -35,7 +35,7 @@
                             @if ($type == 'lang')
                             {{ $data->article }}</div>
                             @else
-                            {{ $data->letter }}</div>
+                            {!! $data->letter !!}{{-- {{ $data->letter }} --}}</div>
                             @endif
 
                     </div>

@@ -86,7 +86,7 @@ class GenerateCoverLetterJob implements ShouldQueue
                         ],
                         [
                             'role' => 'user',
-                            'content' => 'rédige une longue lettre de motivation (plus que 350 mots c\'est important!) (Cover letter) bien rédiger en respectant les structures, en langue:" '.$this->coverlanguage.'", pour l\'envoyer à une entreprise qui cherche un: '.$this->position.'
+                            'content' => 'rédige une longue lettre de motivation (HTML) (plus que 350 mots c\'est important!) (Cover letter) bien rédiger en respectant les structures, en langue:" '.$this->coverlanguage.'", pour l\'envoyer à une entreprise qui cherche un: '.$this->position.'
                             Voila les informations que tu as besoin pour la rédaction:
                             Mon nom complet ( nom et prénom ): "'.$this->name.'". l\'entreprise qui a posé l\'annonce de l\'offre de travail est: "'.$this->company.'", et les projet que j\'ai réalisé ainsi que mes expériences: '.$this->projects.'.
                             la position demandé par l\'entreprise dans son annonce est : "'.$this->position.'"

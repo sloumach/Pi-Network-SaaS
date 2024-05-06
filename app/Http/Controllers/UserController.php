@@ -33,9 +33,9 @@ class UserController extends Controller
             $cover = CoverLetter::where('user_id', Auth::id())->findOrFail($request->cover_id);
 
         //$NewCover = strip_tags($request->cover);
-        $extractedContent = preg_replace('/<[\/]?p[^>]*>/', '', $request->cover);
+        //$extractedContent = preg_replace('/<[\/]?p[^>]*>/', '', $request->cover);
 
-        $cover->letter = $extractedContent;
+        $cover->letter = $request->cover;
         $cover->save();
         return 'saved';
         } else {
