@@ -50,7 +50,7 @@
 @push('scripts')
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script>Pi.init({ version: "2.0", sandbox: true })</script>
-<script>
+{{-- <script>
     // Authenticate the user, and get permission to request payments from them:
     const scopes = ['payments'];
 
@@ -76,6 +76,6 @@
     }).catch(function(error) {
     console.error(error);
     });
-</script>
+</script> --}}
 
 @endpush
